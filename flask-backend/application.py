@@ -17,26 +17,28 @@ def serve_static_files(path):
 def chat():
     data = request.json
     message = data.get('message')
-    target_language = data.get('language', 'en')
+    target_langcode = data.get('language', 'en')
 
     if not message.strip():
         return jsonify({"error": "empty message box"}), 400
 
-    response = find_matching_diseases(message, target_language)
+    response = find_matching_diseases(message, target_langcode)
     """
     return {
         "tokens": tokens,
         "top_matches_dict": top_matches_dict,
         "symptoms_in_english": symptoms_in_english,
         "detected_language": detected_language,
+        "target_language" : target_language,
         "response_in_target_language": response_in_target_language,
     }
     """
 
     return jsonify({
             "tokens": response["tokens"],
-            "sentence_translation": response["response_in_target_language"],
-            "language_info": response["detected_language"]
+            "translatedResponse": response["response_in_target_language"],
+            "detectedLanguage": response["detected_language"],
+            "targetLanguage": response["target_language"]
         })
 
 

@@ -7,7 +7,7 @@ from translation import *
 SYMPTOM_DATA = pd.read_csv('data/Symptom2Disease.csv')
 
 # Function to find matching diseases
-def find_matching_diseases(user_symptoms, target_language, top_n=3):
+def find_matching_diseases(user_symptoms, target_langcode, top_n=3):
     """
     Match user symptoms to the dataset using TF-IDF vectorization and cosine similarity.
     Args:
@@ -21,10 +21,14 @@ def find_matching_diseases(user_symptoms, target_language, top_n=3):
 
     tokens               = tokenize(user_symptoms)
     symptoms_in_english  = translate_sentence(user_symptoms)
-    detected_language    = detect_language(user_symptoms)
+    detected_langcode    = detect_language(user_symptoms)
 
     # Change target language accordingly
-    target_language = detected_language['language'] if target_language == "auto" else target_language
+    target_langcode = detected_langcode if target_langcode == "auto" else target_langcode
+
+    # Get language names from the lang_code
+    detected_language = decode_langcode(detected_langcode)
+    target_language = decode_langcode(target_langcode)
 
     # Combine user symptoms with the dataset for vectorization
     combined_texts = [symptoms_in_english] + SYMPTOM_DATA['text'].tolist()
@@ -49,12 +53,13 @@ def find_matching_diseases(user_symptoms, target_language, top_n=3):
     response_string = "\n\n".join([f"{match['label']}: {match['text']}" for match in top_matches_dict])
     
     # Translate response to the target language
-    response_in_target_language = translate_sentence(response_string, target_language)
-    
+    response_in_target_language = translate_sentence(response_string, target_langcode)
+        
     return {
         "tokens": tokens,
         "top_matches_dict": top_matches_dict,
         "symptoms_in_english": symptoms_in_english,
         "detected_language": detected_language,
+        "target_language": target_language,
         "response_in_target_language": response_in_target_language,
     }

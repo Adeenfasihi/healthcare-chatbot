@@ -24,17 +24,16 @@ function App() {
       .then((res) => res.json())
       .then((data) => {
         // Update the detected language for the last user message
-        console.log("Backend response:", data);
         setMessages((prevMessages) =>
           prevMessages.map((msg, index) =>
             index === prevMessages.length - 1
-              ? { ...msg, detectedLanguage: data.language_info.language }
+              ? { ...msg, detectedLanguage: data.detectedLanguage.language }
               : msg
           )
         );
 
         // Add the bot's message
-        const botMessage = { text: data.sentence_translation, type: "bot" };
+        const botMessage = { text: data.translatedResponse, type: "bot", targetLanguage: data.targetLanguage.language };
         setMessages((prevMessages) => [...prevMessages, botMessage]);
       })
       .catch((err) => {
