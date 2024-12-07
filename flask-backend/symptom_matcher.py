@@ -1,12 +1,13 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
+from translation import *
 
 # Load dataset
 SYMPTOM_DATA = pd.read_csv('data/Symptom2Disease.csv')
 
 # Function to find matching diseases
-def find_matching_diseases(user_symptoms, top_n=3):
+def find_matching_diseases(user_symptoms, target_language, top_n=3):
     """
     Match user symptoms to the dataset using TF-IDF vectorization and cosine similarity.
     Args:
@@ -17,8 +18,13 @@ def find_matching_diseases(user_symptoms, top_n=3):
     Returns:
     - matches (list): List of top matches with diseases and similarity scores.
     """
+
+    tokens               = tokenize(user_symptoms)
+    symptoms_in_english  = translate_sentence(user_symptoms)
+    detected_language    = detect_language(user_symptoms)
+
     # Combine user symptoms with the dataset for vectorization
-    combined_texts = [user_symptoms] + SYMPTOM_DATA['text'].tolist()
+    combined_texts = [symptoms_in_english] + SYMPTOM_DATA['text'].tolist()
 
     # Vectorize using TF-IDF
     vectorizer = TfidfVectorizer()
@@ -32,5 +38,20 @@ def find_matching_diseases(user_symptoms, top_n=3):
 
     # Sort by similarity and return top matches
     top_matches = SYMPTOM_DATA.nlargest(top_n, 'similarity')[['label', 'text', 'similarity']]
+
+    top_matches_dict = top_matches.to_dict(orient='records')
+
+    # Translate response back to user's language
+    response_in_user_language = "\n\n".join([f"{match['label']}: {match['text']}" for match in top_matches_dict])
+
+    response_in_target_language = \
+        translate_sentence(response_in_user_language, target_language) \
+        if detected_language != target_language else response_in_user_language
     
-    return top_matches.to_dict(orient='records')
+    return {
+        "tokens": tokens,
+        "top_matches_dict": top_matches_dict,
+        "symptoms_in_english": symptoms_in_english,
+        "detected_language": detected_language,
+        "response_in_target_language": response_in_target_language,
+    }

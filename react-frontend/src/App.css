@@ -66,3 +66,7 @@ button {
   text-align: right;
   margin-top: 5px;
 }
+
+.display-linebreak {
+  white-space: pre-line;
+}

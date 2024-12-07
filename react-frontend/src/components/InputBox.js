@@ -14,7 +14,7 @@ function InputBox({ onSendMessage }) {
       <input
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder="Type your message..."
+        placeholder="Describe your symptoms..."
       />
       <button onClick={handleSend}>Send</button>
     </div>
