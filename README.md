@@ -3,7 +3,7 @@
 python >= 3.10
 npm
 
-Commands to run the code
+## Commands to run the code
 
 In flask-backend directory
 ```
