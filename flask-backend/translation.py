@@ -28,7 +28,10 @@ def translate_sentence(text, target_lang='en'):
         return f"There was an error in translation: {str(e)}"
 
 def detect_language(text):
-    lang_code = detect(text)
+    lang_code = detect(text)    
+    return lang_code
+
+def decode_langcode(lang_code):
     language = langcodes.get(lang_code).language_name()
     
     return {"language": language} if language else {"language": "Unknown"}
