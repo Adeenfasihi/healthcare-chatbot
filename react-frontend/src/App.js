@@ -6,7 +6,7 @@ import LanguageSelector from "./components/LanguageSelector";
 
 function App() {
   const [messages, setMessages] = useState([]);
-  const [language, setLanguage] = useState("en");
+  const [language, setLanguage] = useState("auto");
 
   const handleSendMessage = (message) => {
     if (!message.trim()) return;

@@ -23,6 +23,9 @@ def find_matching_diseases(user_symptoms, target_language, top_n=3):
     symptoms_in_english  = translate_sentence(user_symptoms)
     detected_language    = detect_language(user_symptoms)
 
+    # Change target language accordingly
+    target_language = detected_language['language'] if target_language == "auto" else target_language
+
     # Combine user symptoms with the dataset for vectorization
     combined_texts = [symptoms_in_english] + SYMPTOM_DATA['text'].tolist()
 
@@ -43,12 +46,10 @@ def find_matching_diseases(user_symptoms, target_language, top_n=3):
     top_matches_dict = top_matches.to_dict(orient='records')
 
     # Concatenate the top_n results
-    response_in_user_language = "\n\n".join([f"{match['label']}: {match['text']}" for match in top_matches_dict])
+    response_string = "\n\n".join([f"{match['label']}: {match['text']}" for match in top_matches_dict])
     
-    # Translate response to the target language if specified
-    response_in_target_language = \
-        translate_sentence(response_in_user_language, target_language) \
-        if detected_language != target_language else response_in_user_language
+    # Translate response to the target language
+    response_in_target_language = translate_sentence(response_string, target_language)
     
     return {
         "tokens": tokens,

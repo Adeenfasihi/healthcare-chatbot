@@ -6,9 +6,10 @@ function LanguageSelector({ setLanguage }) {
       <label htmlFor="language-select">Select Language:</label>
       <select
         id="language-select"
-        defaultValue={"en"}
+        defaultValue={"auto"}
         onChange={(e) => setLanguage(e.target.value)}
       >
+        <option value="auto">Auto</option>
         <option value="en">English</option>
         <option value="es">Spanish</option>
         <option value="fr">French</option>
