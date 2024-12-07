@@ -50,7 +50,7 @@ def symptom_checker():
             return jsonify({"error": "No symptoms provided."}), 400
 
         # Find matching diseases
-        matches = find_matching_diseases(user_symptoms, symptom_data)
+        matches = find_matching_diseases(user_symptoms)
 
         # Return the results
         return jsonify({"matches": matches}), 200
