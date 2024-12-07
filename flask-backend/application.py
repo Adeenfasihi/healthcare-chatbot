@@ -22,6 +22,7 @@ def chat():
     if not message.strip():
         return jsonify({"error": "empty message box"}), 400
 
+    response = find_matching_diseases(message, target_language)
     """
     return {
         "tokens": tokens,
@@ -31,8 +32,6 @@ def chat():
         "response_in_target_language": response_in_target_language,
     }
     """
-    response = find_matching_diseases(message, target_language)
-
 
     return jsonify({
             "tokens": response["tokens"],
