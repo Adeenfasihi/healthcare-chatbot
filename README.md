@@ -1,4 +1,7 @@
 # Symptom checker and diagnoser bot
+## Prerequisites
+python >= 3.10
+npm
 
 Commands to run the code
 
