@@ -1,6 +1,6 @@
 from flask import Flask, send_from_directory, request, jsonify
 from flask_cors import CORS
-from symptom_matcher import *
+from symptom_matcher import find_matching_diseases
 
 app = Flask(__name__, static_folder='build', static_url_path='')
 CORS(app)

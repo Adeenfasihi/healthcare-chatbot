@@ -39,11 +39,13 @@ def find_matching_diseases(user_symptoms, target_language, top_n=3):
     # Sort by similarity and return top matches
     top_matches = SYMPTOM_DATA.nlargest(top_n, 'similarity')[['label', 'text', 'similarity']]
 
+    # Create a dictionary of out of the matches
     top_matches_dict = top_matches.to_dict(orient='records')
 
-    # Translate response back to user's language
+    # Concatenate the top_n results
     response_in_user_language = "\n\n".join([f"{match['label']}: {match['text']}" for match in top_matches_dict])
-
+    
+    # Translate response to the target language if specified
     response_in_target_language = \
         translate_sentence(response_in_user_language, target_language) \
         if detected_language != target_language else response_in_user_language
